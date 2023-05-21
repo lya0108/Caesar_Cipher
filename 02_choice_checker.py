@@ -16,9 +16,10 @@ def choice_checker(question, valid_list, error, num_letters):
         print()
 
 yesno = ["yes", "no"]
-onetwo = [1, 2]
+onetwo = ["1", "2"]
 
-yes_or_no = choice_checker("Yes Or No", yesno, "Please Enter Yes Or No", 1)
-one_or_two = choice_checker("1 Or 2", onetwo, "Please Enter 1 Or 2", 1)
-print(yes_or_no)
-print(one_or_two)
+while True:
+    yes_or_no = choice_checker("Yes Or No: ", yesno, "Please Enter Yes Or No", 1)
+    one_or_two = choice_checker("1 Or 2: ", onetwo, "Please Enter 1 Or 2", 1)
+    print(yes_or_no)
+    print(one_or_two)

@@ -1,5 +1,33 @@
 import math
 
+# checks that choice is within choosen list
+def choice_checker(question, valid_list, error):
+
+    while True:
+        
+        # asks user for choice
+        response = input(question).lower()
+
+        # checks if input is in list
+        for item in valid_list:
+            if response == item[:1] or response == item:
+                return item
+        
+        print(error)
+        print()
+
+def get_input(input, error):
+    while True:
+        if type(input) == int and input > 0:
+            return input
+        
+        else:
+            print(error)
+
+
+yesno = ["yes", "no"]
+onetwo = [1, 2]
+
 sides = int(input("How Many Sides Given? "))
 
 if sides >= 2:
