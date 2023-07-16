@@ -1,4 +1,3 @@
-import math
 
 # checks input is a number and is bigger than 0
 def get_int_input(question, error):

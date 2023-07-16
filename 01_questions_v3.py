@@ -16,43 +16,50 @@ def choice_checker(question, valid_list, error):
         print(error)
         print()
 
-def get_input(input, error):
+# checks input is a number and is bigger than 0
+def get_int_input(question):
     while True:
-        if type(input) == int and input > 0:
-            return input
+        try:
+            response = float(input(question))
+
+            if response > 0:
+                return response
         
-        else:
-            print(error)
+            else:
+                print("Please Enter A Number Bigger Than 0")
+        
+        except ValueError:
+            print("Please Enter A Number Bigger Than 0")
 
 
 yesno = ["yes", "no"]
-onetwo = [1, 2]
+onetwo = ["1", "2"]
 
-sides = int(input("How Many Sides Given? "))
+sides = choice_checker("How Many Sides Given (1 Or 2)? ", onetwo, "Please Enter 1 or 2")
 
-if sides >= 2:
-    use_pythagoras = input("Do You Need Another Side? ")
+if sides == "2":
+    use_pythagoras = choice_checker("Do You Need Another Side? ", yesno, "Please Enter Yes or No")
     
     if use_pythagoras == "yes":
-        find_hypotenuse = input("Do You Need The Hypotenuse? ")
+        find_hypotenuse = choice_checker("Do You Need The Hypotenuse? ", yesno, "Please Enter Yes or No")
 
         if find_hypotenuse == "yes":
-            a = int(input("a = "))
-            b = int(input("b = "))
-            c = math.sqrt(a*a + b*b)
-            print(f"hypotenuse = {c}")
+            base = get_int_input("Base = ")
+            height = get_int_input("Height = ")
+            hypotenuse = round(math.sqrt(base**2 + height**2), 2)
+            print(f"hypotenuse = {hypotenuse}")
         
         else:
-            c = int(input("c = "))
-            b = int(input("b = "))
-            a = math.sqrt(c*c - b*b)
-            print(f"3rd Side = {a}")
+            hypotenuse = get_int_input("Hypotenuse = ")
+            height = get_int_input("Height = ")
+            base = math.sqrt(hypotenuse**2 - height**2)
+            print(f"Base = {base}")
 
     else:
         print("Leave Empty If Not Used")
-        a = int(input("a = "))
-        o = int(input("o = "))
-        h = int(input("h = "))
+        a = get_int_input("a = ")
+        o = get_int_input("o = ")
+        h = get_int_input("h = ")
         
         if a == "":
             angle = math.asin(o/h)
@@ -63,9 +70,9 @@ if sides >= 2:
 
 else:
     print("You Should Have 1 Side And 1 Angle")
-    side = int(input("Side Length = "))
-    angle = int(input("Angle = "))
+    side = get_int_input("Side Length = ")
     side_to_find = input("What Side given (a/o/h): ")
+    angle = get_int_input("Angle = ")
 
     if side_to_find == "a":
         angle = math.sin()
