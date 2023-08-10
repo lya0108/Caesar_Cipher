@@ -36,37 +36,24 @@ angle = choice_checker("What Angle Given (A / B): ", ab, "Please Enter A / B")
 angle_size = get_int_input("Size of Angle = ")
 side_given = choice_checker("What Side given (a / b / c):\n", abc, "Please Enter a / b / c")
 side = get_int_input("Side Length = ")
-    
-# converts angle from radians to degrees
-sin = math.sin(math.radians(angle_size))
-cos = math.cos(math.radians(angle_size))
-tan = math.tan(math.radians(angle_size))
 
-# calculates a, b, c, A, and B then appends it
-if angle == "a" and side_given == "a":
-    a = side
-    b = side/tan
-    c = side/sin
-elif angle == "a" and side_given == "b":
-    a = side*tan
-    b = side
-    c = side/cos
-elif angle == "a" and side_given == "c":
-    a = side*sin
-    b = side*cos
-    c = side
-elif angle == "b" and side_given == "a":
-    a = side
-    b = side*tan
-    c = side/cos
-elif angle == "b" and side_given == "b":
-    a = side/tan
-    b = side
-    c = side/sin
-elif angle == "b" and side_given == "c":
-    a = side*cos
-    b = side*sin
-    c = side
+# converts angle from radians to degrees
+angle_degrees = math.radians(angle_size)
+sin = math.sin(angle_degrees)
+cos = math.cos(angle_degrees)
+tan = math.tan(angle_degrees)
+
+# Calculates a, b, c, A, and B
+side_values = {
+    ("a", "a"): (side, side / tan, side / sin),
+    ("a", "b"): (side * tan, side, side / cos),
+    ("a", "c"): (side * sin, side * cos, side),
+    ("b", "a"): (side, side * tan, side / cos),
+    ("b", "b"): (side / tan, side, side / sin),
+    ("b", "c"): (side * cos, side * sin, side),
+}
+
+a, b, c = side_values[(angle, side_given)]
 
 a = round(a, 2)
 b = round(b, 2)

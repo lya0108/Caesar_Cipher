@@ -19,24 +19,21 @@ def choice_checker(question, valid_list, error):
 
 # checks input is a number and is bigger than 0
 def get_int_input(question, mode):
-    while True:
-        
+    while True: 
         response = (input(question))
 
+        # checks number is a float bigger than 0
         if mode == "":
-
             try:
                 response = float(response)
-
                 if response > 0:
                     return response
-
                 else:
                     print("Please Enter A Number Bigger Than 0")
-            
             except ValueError:
                 print("Please Enter A Number Bigger Than 0")
-        
+            
+        # checks number is a float between 0 and 90
         elif mode == "angle":
 
             try:
@@ -51,6 +48,7 @@ def get_int_input(question, mode):
             except ValueError:
                 print("Please Enter A Number Between 0 And 90")
         
+        # checks number is an integer bigger than 0
         else: 
             try:
                 response = int(response)
@@ -81,36 +79,23 @@ def angle_side_calc():
     cos = math.cos(angle_degrees)
     tan = math.tan(angle_degrees)
 
-    # calculates a, b, c, A, and B then appends it
-    if angle == "a" and side_given == "a":
-        a = side
-        b = side/tan
-        c = side/sin
-    elif angle == "a" and side_given == "b":
-        a = side*tan
-        b = side
-        c = side/cos
-    elif angle == "a" and side_given == "c":
-        a = side*sin
-        b = side*cos
-        c = side
-    elif angle == "b" and side_given == "a":
-        a = side
-        b = side*tan
-        c = side/cos
-    elif angle == "b" and side_given == "b":
-        a = side/tan
-        b = side
-        c = side/sin
-    elif angle == "b" and side_given == "c":
-        a = side*cos
-        b = side*sin
-        c = side
+    # Calculates a, b, and c respectively
+    side_values = {
+        ("a", "a"): (side, side / tan, side / sin),
+        ("a", "b"): (side * tan, side, side / cos),
+        ("a", "c"): (side * sin, side * cos, side),
+        ("b", "a"): (side, side * tan, side / cos),
+        ("b", "b"): (side / tan, side, side / sin),
+        ("b", "c"): (side * cos, side * sin, side),
+    }
+
+    a, b, c = side_values[(angle, side_given)]
 
     a = round(a, 2)
     b = round(b, 2)
     c = round(c, 2)
 
+    # calculates α and ß
     if angle == "a":
         angle = "α"
         α = round(angle_size, 2)
@@ -130,55 +115,22 @@ def angle_side_calc():
     ß_list.append(ß)
 
 # does calculations when given 2 sides
-def sides_2_calc():
-    print("\n")
-    while True:
-        while True:
-            # asks user for sides info
-            given_1 = choice_checker("First Side Given (a / b): ", ab, "Please Enter a / b")
-            length_1 = get_int_input(f"Length of Side ({given_1}): ", "")
-            given_2 = choice_checker("\nSecond Side Given (a / b / c): ", abc, "Please Enter a / b / c")
+def sides_2_calc(given_1, length_1, given_2, length_2):
 
-            if given_1 == given_2:
-                print("I Think You Made A Typo?")
-            elif given_1 != given_2:
-                length_2 = get_int_input(f"Length of Side ({given_2}): ", "")
-                break
-        
-        if given_2 == "c" and length_2 <= length_1:
-            print("Typo?\nYour Hypotenuse Must Be Bigger Than Your Other Side")
-            
-        else:
-            break
-
-    # calculations
+    # does calculations for a, b, and c
     if given_1 == "b" and given_2 == "c":
         a = round(math.sqrt(length_2**2 - length_1**2), 2)
-        b = length_1
-        c = length_2
-        α = math.acos(length_1/length_2)
-        ß = math.asin(length_1/length_2)
+        b, c = length_1, length_2
     elif given_1 == "a" and given_2 == "c":
-        a = length_1
+        a, c = length_1, length_2
         b = round(math.sqrt(length_2**2 - length_1**2), 2)
-        c = length_2
-        α = math.asin(length_1/length_2)
-        ß = math.acos(length_1/length_2)
-    elif given_1 == "a" and given_2 == "b":
-        a = length_1
-        b = length_2
-        c = round(math.sqrt(length_1**2 + length_2**2), 2)
-        α = math.atan(length_1/length_2)
-        ß = math.atan(length_2/length_1)
     else:
-        a = length_2
-        b = length_1
+        a, b = length_1, length_2
         c = round(math.sqrt(length_1**2 + length_2**2), 2)
-        α = math.atan(length_2/length_1)
-        ß = math.atan(length_1/length_2)
     
-    α = math.degrees(α)
-    ß = math.degrees(ß)
+    # does calculations for α and ß
+    α = math.degrees(math.asin(a/c))
+    ß = math.degrees(math.asin(b/c))
 
     a = round(a, 2)
     b = round(b, 2)
@@ -200,6 +152,7 @@ def degree_symbol(x):
     # adds ° to the back
     return "{}°".format(x)
 
+# valid lists
 yesno = ["yes", "no"]
 onetwo = ["1", "2", "xxx"]
 ab = ["a", "b"]
@@ -246,6 +199,7 @@ if instructions == "yes":
            b
     """)
     print("*For Reference*\nPlease Note: All Units Must Be The Same For Answers To Be Relevant♥\nAnd All Values Are Rounded To 2 Decimal Places\n")
+
 # asks user for number of questions
 while True:
     num_questions = get_int_input("How Many Questions: ", "♥")
@@ -267,14 +221,35 @@ while num_questions >= current_question:
     sides = choice_checker("How Many Sides Given 1 Or 2? (Type xxx to Exit) ", onetwo, "Please Enter 1 or 2, or xxx to Exit")
 
     if sides == "2":
-        # find angle size (using 2 sides)  --- complete
-        sides_2_calc()
+
+        while True:
+            while True:
+                # asks user for sides info
+                given_1 = choice_checker("First Side Given (a / b): ", ab, "Please Enter a / b")
+                length_1 = get_int_input(f"Length of Side ({given_1}): ", "")
+                given_2 = choice_checker("\nSecond Side Given (a / b / c): ", abc, "Please Enter a / b / c")
+
+                # checks if both sides are not the same 
+                if given_1 == given_2:
+                    print("I Think You Made A Typo?")
+                elif given_1 != given_2:
+                    length_2 = get_int_input(f"Length of Side ({given_2}): ", "")
+                    break
+            
+            # checks if the hypotenuse is longer than the other side
+            if given_2 == "c" and length_2 <= length_1:
+                print("Typo?\nYour Hypotenuse Must Be Bigger Than Your Other Side")
+                
+            else:
+                break
+        # find angle size (using 2 sides)
+        sides_2_calc(given_1, length_1, given_2, length_2)
 
     # exit code
     elif sides == "xxx":
         break
 
-    # find a side using an angle and side  --- complete
+    # find a side using an angle and side
     else:
         angle_side_calc()
     
