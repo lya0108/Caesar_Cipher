@@ -4,18 +4,26 @@ import pandas
 # checks that choice is within choosen list
 def choice_checker(question, valid_list, error):
 
+    exit_code = "xxx"
     while True:
         
         # asks user for choice
         response = input(question).lower()
 
-        # checks if input is in list
-        for item in valid_list:
-            if response == item[:1] or response == item:
-                return item
+        if response == exit_code:
+            return response
         
-        print(error)
-        print()
+        elif response[:1] == "x":
+            print(error)
+
+        else:
+            # checks if input is in list
+            for item in valid_list:
+                if response == item[:1] or response == item:
+                    return item
+            
+            print(error)
+            print()
 
 # checks input is a number and is bigger than 0
 def get_int_input(question, mode):
@@ -99,11 +107,11 @@ def angle_side_calc():
     if angle == "a":
         angle = "α"
         α = round(angle_size, 2)
-        ß = 90 - α
+        ß = round(90 - α)
     else:
         angle = "ß"
         ß = round(angle_size, 2)
-        α = 90 - ß
+        α = round(90 - ß)
         
     question = (f"{angle}={angle_size}°,{side_given}={side}")
 
@@ -132,6 +140,7 @@ def sides_2_calc(given_1, length_1, given_2, length_2):
     α = math.degrees(math.asin(a/c))
     ß = math.degrees(math.asin(b/c))
 
+    # rounds to 2 d.p
     a = round(a, 2)
     b = round(b, 2)
     c = round(c, 2)
@@ -224,6 +233,7 @@ while num_questions >= current_question:
 
         while True:
             while True:
+                print("══════════════════════════════════════════════════")
                 # asks user for sides info
                 given_1 = choice_checker("First Side Given (a / b): ", ab, "Please Enter a / b")
                 length_1 = get_int_input(f"Length of Side ({given_1}): ", "")
@@ -263,6 +273,7 @@ add_degree = ["α", "ß"]
 for item in add_degree:
     info_frame[item] = info_frame[item].apply(degree_symbol)
 
+# checks if frame is empty
 if info_frame.empty:
     print("\n==== No Questions Asked ====")
 else:
